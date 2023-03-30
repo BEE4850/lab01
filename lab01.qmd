@@ -1,0 +1,133 @@
+---
+title: "Lab 1: Getting Started with Julia"
+format:
+    html: default   
+    pdf: default
+    ipynb: default
+jupyter: julia-1.8
+format-links: [pdf]
+---
+
+::: {.content-visible when-format="ipynb"}
+**Name**:
+
+**ID**:
+:::
+
+::: {.callout-important icon=false}
+### Due Date
+
+Friday, 2/2/24, 9:00pm
+:::
+
+::: {.content-visible when-format="html"}
+
+:::{.callout-caution}
+
+If you are enrolled in the course, make sure that you use the GitHub Classroom link provided in Ed Discussion, or you may not be able to get help if you run into problems.
+
+Otherwise, you can [find the Github repository here]({{< var github_org.repo >}}/lab01).
+
+:::
+
+## Introduction
+
+### Overview
+
+The goal of this lab is to get you up and running with Julia. You'll start to be introduced to some of the basic syntax and workflow for data analysis in Julia, which we will build on over the course of the semester. We'll do some stats without making this apparent, and later in the semester, we'll formalize the type of analysis that you'll complete in this lab.
+
+This lab repeats the analysis from [Statistics Without The Agonizing Pain](https://www.youtube.com/watch?v=5Dnw46eC-0o) by John Rauser (which is a neat watch!).
+
+### Learning Objectives
+
+After completing this lab, students wil be able to:
+
+- write functions in Julia to simulate alternative datasets;
+- make plots to compare summaries of observed datasets to alternatives.
+
+## Setup
+
+### Loading Packages
+
+The first step in any Julia script or program is to load the environment, which contains any needed packages. To keep things efficient, "base" Julia contains relatively minimal functionality, and additional packages can be installed and loaded to add new functions and tools. In Julia, package management is handled through the `Pkg.jl` module. Julia stores information about packages in two files: `Project.toml` and `Manifest.toml`, which is why these are included in all of your assignment repositories. You won't need to touch these directly.
+
+The following lines load `Pkg.jl` and activate the desired environment.
+
+```{julia}
+using Pkg # load Pkg.jl
+Pkg.activate(@__DIR__) # load the environment based on the *.toml files in the same directory as the current file
+Pkg.instantiate() # install any needed packages which are missing from the local install
+Pkg.status() # print the packages available in the environment.
+```
+
+I will start all of your assignments and scripts with at least the first three of these lines (`Pkg.status()` can be useful when you don't know what's available, but won't be necessary for our purposes going forward).
+
+If you want to add additional packages for later use, you can do so with `Pkg.add()`. I've commented out these lines, as they are not needed, but feel free to uncomment and test: trying to `add` a package which is already in the environment won't do anything harmful.
+
+```{julia}
+# Pkg.add("Plots") # add Plots.jl, the base plotting library, to the environment
+```
+
+Now, we load the packages that we will need with the `using` keyword.
+
+```{julia}
+using Random # this loads functionality for random number generation
+using StatsBase : mean # this importants the "mean" function from the StatsBase package, which includes basic statistical functions
+using Plots # this loads Plots.jl
+```
+
+And we're all set! Because we provided the environment files, the rest of this notebook should work smoothly (assuming you're using Julia 1.8.x), but if not, please ask or post about it!
+
+::: {.callout-caution}
+Sometimes difficulties can emerge if the version of Julia is different. The first thing to try is to delete `Manifest.toml` and re-run `Pkg.instantiate()`, as this might resolve some issues related to package versions, though it runs the risk of a update changing some of the syntax. If you run into trouble, please bring it up on Ed Discussion, and we'll work through it.
+:::
+
+
+### Load Data
+
+The underlying question we would like to address is: what is the influence of drinking beer on the likelihood of being bitten by mosquitoes?
+
+First, we need to load the data. We will look at ways to work with structured data files later. For now, let's just enter the data manually. We will do this using *vectors*, which are data structures which correspond to one-dimensional lists. To define a vector, enclose the values between two square brackets, `[` and `]`^[There is some nuance about whether you separate values with commas or spaces, which determines if the resulting vector is a row vector or a column vector. This isn't particularly relevant for this assignment, but can matter later.] Line breaks don't matter: Julia is smart enough to recognize that the procedure isn't complete until it sees the closing bracket.
+
+Let's load data for the number of bites reported by the participants who drank beer.
+
+```{julia}
+beer = [27, 20, 21, 26, 27, 31, 24, 21, 20, 19, 23, 24, 28, 19, 24, 29, 18, 20, 17, 31, 20, 25, 28, 21, 27]
+```
+
+We can see what type of variable `beer` is by using the `typeof` function:
+```{julia}
+typeof(beer)
+```
+
+This tells us that `beer` is a vector consisting of integers (which means they don't include any decimals). Next, let's load the data for the number of times participants who were drinking water were bitten.
+
+```{julia}
+water = [21, 22, 15, 12, 21, 16, 19, 15, 22, 24, 19, 23, 13, 22, 20, 24, 18, 20];
+```
+
+Notice that, unlike when we created `beer`, we didn't get any output from creating `water`. This is because we ended the statement with a semi-colon `;`, which suppresses the output that would otherwise be displayed. This can be a convenient way to clean up the output of your code.
+
+Another handy method for displaying variables is the `@show` macro. A *macro* is just a particular type of Julia function which starts with `@` and is "applied" to some other code:
+
+```{julia}
+@show water;
+```
+
+The nice thing about using @show is that it explicitly tells us the name of the variable and what it equals. However, we do have to include the semi-colon, or else it will double-print the output.
+
+### Initial Analysis
+
+How can we determine if there's a meaningful difference between these two sets of numbers? Naively, we might simply look at the different in means between the two datasets.
+
+```{julia}
+observed_differece = mean(beer) - mean(water)
+@show observed_difference;
+```
+
+This tells us that the participants in the experiment who drank beer were bitten approximately 4.3 more times than the participants who drank water! Does that seem like a meaningful difference, or could it be the result of random chance?
+
+
+
+
+
