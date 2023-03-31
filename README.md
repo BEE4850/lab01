@@ -1,6 +1,6 @@
 # Lab 1: Introduction to Simulation and Data Analysis
 
-![MIT License](https://img.shields.io/github/license/BEE4850/lab01?style=for-the-badge)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is the repository for Lab 1 for [BEE 4850](https://viveks.me/simulation-data-analysis), taught at [Cornell University](https://cornell.edu) in Spring 2024 by [Vivek Srikrishnan](https://viveks.me).
 
