@@ -1,5 +1,5 @@
 ---
-title: "Lab 1: Getting Started with Julia"
+title: "Lab 1: Getting Started With Simulation in Julia"
 format:
     html:        
         warning: true

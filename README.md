@@ -1,4 +1,4 @@
-# Lab 1: Introduction to Simulation and Data Analysis
+# Lab 1: Getting Started With Simulation in Julia
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
