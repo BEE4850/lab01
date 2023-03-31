@@ -42,7 +42,8 @@ This lab repeats the analysis from [Statistics Without The Agonizing Pain](https
 
 After completing this lab, students wil be able to:
 
-- write functions in Julia to simulate alternative datasets;
+- write functions in Julia;
+- simulate alternative datasets to test a hypothesis;
 - make plots to compare summaries of observed datasets to alternatives.
 
 ## Setup
@@ -72,7 +73,7 @@ Now, we load the packages that we will need with the `using` keyword.
 
 ```{julia}
 using Random # this loads functionality for random number generation
-using StatsBase : mean # this importants the "mean" function from the StatsBase package, which includes basic statistical functions
+using StatsBase # this includes a bunch of statistical functions, including mean and quantile
 using Plots # this loads Plots.jl
 ```
 
@@ -125,9 +126,104 @@ observed_differece = mean(beer) - mean(water)
 @show observed_difference;
 ```
 
-This tells us that the participants in the experiment who drank beer were bitten approximately 4.3 more times than the participants who drank water! Does that seem like a meaningful difference, or could it be the result of random chance?
+This tells us that the participants in the experiment who drank beer were bitten approximately 4.3 more times than the participants who drank water! Does that seem like a meaningful difference, or could it be the result of random chance? In this problem, we will use a *simulation* approach to address this question.
 
+Suppose someone is skeptical of the idea that drinking beer could result in a higher attraction to mosquitoes, and therefore more bites. To this skeptic, the two datasets are really just different samples from the same underlying population of people getting bitten by mosquitoes, rather than two different populations with different propensities for being bitten. If this is the case, then we can "shuffle" all of the measurements between the two datasets and re-compute the differences in the means, repeat this procedure a large number of times, and the difference between the two observed means should be captured by the distribution of possible differences.
 
+## Problems
 
+### Problem 1: Write a Simulation Function (10 points)
 
+Write a function which:
 
+1. takes in two vectors;
+2. combines them (you can use the [`vcat()`](https://docs.julialang.org/en/v1/base/arrays/#Base.vcat) function to concatenate two column vectors);
+3. shuffles the combined vector (using the [`shuffle`](https://docs.julialang.org/en/v1/stdlib/Random/#Random.shuffle) function);
+4. splits this shuffled vector into two vectors with the length of the original data;
+5. returns the difference between the means of these two vectors.
+
+We've given you a starting skeleton function below; you just need to fill in the code. This may require some Googling to figure out the exact syntax, and you can consult the course website's [Julia Basics tutorial](https://viveks.me/simulation-data-analysis/tutorials/julia-basics.html). Make sure to reference any consulted resources in the References section below!
+
+::: {.callout-tip}
+### Why Write a Function?
+
+Writing a function for code that you are going to re-use multiple times makes your program more organized and readable. Plus, if you find a bug, you only have to fix it in one place! Julia's compiler also can better optimize code which is organized around functions.
+:::
+
+```{julia}
+# the function name says that it does: try to use meaningful variable and and function names!
+# y1 and y2 are the input vectors
+function simulate_difference(y1, y2)
+# concatenate both vectors into a single vector
+
+# shuffle this new vector
+
+# split the shuffled vector into two vectors with the same lengths as y1 and y2
+
+# compute the difference in means between these two new vectors; call this "difference"
+
+# return the difference
+return difference
+end
+```
+
+Apply your function to `beer` and `water`.
+
+```{julia}
+simulate_differences(beer, water)
+```
+
+### Problem 2: Plot Simulations (5 points)
+
+Generate 10,000 simulations by applying your function to `beer` and `water` repeatedly. The most straightforward way to do this is with a *comprehension*, which will automatically evaluate the function over a vector if inputs and return a vector. The general format for a comprehension is `output = [function(var) for var in some_range]`.
+
+For example, to compute the square of all of the integers between 0 and 10:
+```{julia}
+squares = [x^2 for x in 1:10]
+```
+
+To reuse a function repeatedly on the same inputs, you can just use the `for var in some_range` as a counter, without `var` changing the inputs to the function.
+
+You could also 
+
+```{julia}
+# compute your differences here
+
+```
+
+Finally, plot a histogram of the differences in means along with a vertical line showing the observed difference. You can adjust the code below based on what your named your vector of differences above. If you have questions about any of the arguments to `histogram()` or `vline!(), please experiment, ask, and/or look at the website's [Making Plots with Julia tutorial](https://viveks.me/simulation-data-analysis/tutorials/julia-plots.html).
+
+::: {.callout-important}
+### Mutating Functions
+
+Functions which change their inputs in-place (without needing the output to be saved to another variable) are called *mutating*. In Julia, the convention is to end functions which mutate their inputs with an exclamation point `!`. For example, `vline(...)` will create a new plot with just a vertical line, but `vline!(p, ...)` will add a vertical line to the existing plot `p`. There are many mutating functions, particularly for plotting, that you will encounter, but it's good practice in general to avoid mutation for your own functions.
+:::
+
+::: {.callout-note}
+### Keyword Arguments
+
+Julia separates arguments which are required and those which are optional (and therefore require keywords to tell the function that they're not just the defaults) with a semi-colon, as you can see in the code below. 
+:::
+
+```{julia}
+p = histogram(simulated_differences; # this is the vector for the histogram
+xlabel="Differences in Means", # set the x-axis label
+ylabel="Proportion of Samples", # set the y-axis label
+label="Simulations Assuming Skeptical Hypothesis", # set legend label for the data in this series,
+legend=:topleft, # legend position; you can turn the legend off with legend=false
+normalize=true, # plot proportion of samples instead of raw counts
+color=:blue # set the color of histogram bars
+)
+vline!(p, # plot on the previous plot p
+[observed_difference]; # vline wants the value(s) to be in a vector,
+label="Observed Difference", # add line label to legend
+linewidth=2, # set the width of this line
+color=:red # set the color of the line
+)
+```
+
+### Problem 3: Interpret Results (5 Points)
+
+Congratulations, you just tested a hypothesis based on analyzing simulations! What do you think about the plausibility of the skeptic's hypothesis that there is no difference? Feel free to use any quantitative or qualitative assessments of your simulations and the observed difference.
+
+## References Consulted
