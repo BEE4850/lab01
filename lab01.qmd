@@ -1,11 +1,18 @@
 ---
 title: "Lab 1: Getting Started with Julia"
 format:
-    html: default   
-    pdf: default
-    ipynb: default
+    html:        
+        warning: true
+        error: true
+    pdf:
+        warning: true
+        error: true
+    ipynb:
+        warning: true
+        error: true
 jupyter: julia-1.8
 format-links: [pdf]
+freeze: false
 ---
 
 ::: {.content-visible when-format="ipynb"}
