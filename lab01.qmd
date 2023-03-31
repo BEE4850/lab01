@@ -129,7 +129,7 @@ The nice thing about using @show is that it explicitly tells us the name of the 
 How can we determine if there's a meaningful difference between these two sets of numbers? Naively, we might simply look at the different in means between the two datasets.
 
 ```{julia}
-observed_differece = mean(beer) - mean(water)
+observed_difference = mean(beer) - mean(water)
 @show observed_difference;
 ```
 
