@@ -36,6 +36,7 @@ If you are enrolled in the course, make sure that you use the GitHub Classroom l
 Otherwise, you can [find the Github repository here]({{< var github_org.repo >}}/lab01).
 
 :::
+:::
 
 ## Introduction
 
