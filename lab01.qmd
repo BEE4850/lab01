@@ -10,7 +10,7 @@ format:
     ipynb:
         warning: true
         error: true
-jupyter: julia-1.8
+jupyter: julia-1.9
 format-links: [pdf]
 freeze: false
 ---
